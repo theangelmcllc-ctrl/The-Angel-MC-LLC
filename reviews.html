@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reviews — The Angel MC LLC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Cormorant:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<header class="wrap">
+  <nav class="navbar">
+    <a href="index.html" class="logo" aria-label="The Angel MC LLC — home">
+      <img src="images/logo.jpg" alt="Angel MC logo">
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="services.html">Services</a>
+      <a href="reviews.html">Reviews</a>
+      <a href="contact.html">Contacts</a>
+      <a href="appointment.html">Appointment</a>
+    </div>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span>
+    </button>
+  </nav>
+  <div class="page-header">
+    <h1>Reviews</h1>
+    <button type="button" class="btn" id="toggleWriteReview">
+      <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      Write a review
+    </button>
+  </div>
+
+  <div class="write-review-panel" id="writeReviewPanel">
+    <div class="wr-identity" id="wrIdentity">
+      <div id="googleSignInBtn"></div>
+      <div class="wr-signed-in" id="wrSignedIn" style="display:none;">
+        <img id="wrSignedInPic" alt="">
+        Posting as <strong id="wrSignedInName"></strong>
+        <button type="button" id="wrSignOut">Not you?</button>
+      </div>
+    </div>
+    <form id="writeReviewForm">
+      <div class="form-field">
+        <label>Your rating</label>
+        <div class="star-picker" id="starPicker" role="radiogroup" aria-label="Rating">
+          <button type="button" class="star" data-value="1" aria-label="1 star">★</button>
+          <button type="button" class="star" data-value="2" aria-label="2 stars">★</button>
+          <button type="button" class="star" data-value="3" aria-label="3 stars">★</button>
+          <button type="button" class="star" data-value="4" aria-label="4 stars">★</button>
+          <button type="button" class="star" data-value="5" aria-label="5 stars">★</button>
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="wr-text">Your review</label>
+        <textarea id="wr-text" rows="3" required placeholder="Tell us about your experience..."></textarea>
+      </div>
+      <div class="wr-actions">
+        <button type="submit" class="btn" id="wr-submit">Post review</button>
+        <span class="wr-note">Or leave it directly on <a href="https://search.google.com/local/writereview?placeid=REPLACE_WITH_YOUR_PLACE_ID" target="_blank" rel="noopener">Google</a>.</span>
+      </div>
+    </form>
+  </div>
+
+  <p class="sync-note" id="syncNote">Loading reviews…</p>
+
+  <div class="summary-card">
+    <div class="summary-score">
+      <div class="num" id="avgScore">4.9</div>
+      <div class="label" id="avgLabel">Excellent</div>
+      <div class="dots" id="avgDots"></div>
+      <div class="summary-count" id="totalCount">(50)</div>
+    </div>
+
+    <div class="summary-bars" id="summaryBars"></div>
+  </div>
+
+  <div class="filter-row">
+    <select class="pill-select" id="ratingFilter" aria-label="Filter by rating">
+      <option value="all">All ratings</option>
+      <option value="5">Excellent (5)</option>
+      <option value="4">Good (4)</option>
+      <option value="3">Average (3)</option>
+      <option value="2">Bad (2)</option>
+      <option value="1">Terrible (1)</option>
+    </select>
+    <select class="pill-select" id="sortReviews" aria-label="Sort reviews">
+      <option value="recent">Sort by: Most recent</option>
+      <option value="highest">Sort by: Highest rating</option>
+      <option value="lowest">Sort by: Lowest rating</option>
+    </select>
+  </div>
+
+  <div class="mentions-title">Popular mentions</div>
+  <div class="mentions" id="mentionsList"></div>
+  <div class="mention-active" id="mentionActive" style="display:none;">
+    Showing reviews mentioning "<span id="mentionActiveWord"></span>"
+    <button type="button" id="clearMention">✕ clear</button>
+  </div>
+
+  <div class="reviews-title" id="reviewsTitle">All reviews (50)</div>
+  <p class="reviews-disclaimer">
+    Reviews are the subjective opinion of customers and not of The Angel MC LLC. The Angel MC LLC
+    performs checks on reviews as part of our industry-leading work to identify and remove fake content.
+  </p>
+
+  <div id="reviewsList"></div>
+  <p class="no-reviews" id="noReviews">No reviews match this filter yet.</p>
+
+</header>
+
+
+
+<footer>
+  <nav class="footer-nav">
+    <a href="index.html#top">Home</a>
+    <a href="services.html">Services</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="contact.html">Contacts</a>
+    <a href="appointment.html">Appointment</a>
+  </nav>
+
+  <div class="footer-social">
+    <a href="https://instagram.com/MC_the_Angel_7" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <defs>
+          <linearGradient id="igGrad5" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#feda75"/>
+            <stop offset="25%" stop-color="#fa7e1e"/>
+            <stop offset="55%" stop-color="#d62976"/>
+            <stop offset="80%" stop-color="#962fbf"/>
+            <stop offset="100%" stop-color="#4f5bd5"/>
+          </linearGradient>
+        </defs>
+        <rect x="2" y="2" width="20" height="20" rx="6" fill="url(#igGrad5)"/>
+        <rect x="6.2" y="6.2" width="11.6" height="11.6" rx="4" fill="none" stroke="#fff" stroke-width="1.6"/>
+        <circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.6"/>
+        <circle cx="17" cy="7" r="1.1" fill="#fff"/>
+      </svg>
+      <span>MC_the_Angel_7</span>
+    </a>
+
+    <a href="mailto:theangelmc333@gmail.com">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" fill="#fff"/>
+        <path d="M2 6l10 8 10-8" fill="none" stroke="#EA4335" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M2 6v12h4V9.2Z" fill="#4285F4"/>
+        <path d="M22 6v12h-4V9.2Z" fill="#34A853"/>
+        <path d="M6 9.2 2 6h4Z" fill="#C5221F"/>
+        <path d="M18 9.2 22 6h-4Z" fill="#FBBC04"/>
+      </svg>
+      <span>theangelmc333@gmail.com</span>
+    </a>
+
+    <a href="https://www.facebook.com/profile.php?id=61557746706475" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5" fill="#1877F2"/>
+        <path d="M14.8 8.6h1.8V5.9h-1.8c-2 0-3.4 1.4-3.4 3.4v1.6H9.5v2.7h1.9V19h2.8v-5.4h1.9l.4-2.7h-2.3V9.6c0-.6.3-1 .9-1Z" fill="#fff"/>
+      </svg>
+      <span translate="no">The Angel Massage Therapy</span>
+    </a>
+  </div>
+
+  <div class="footer-bottom">
+    © <span id="year"></span> The Angel MC LLC. All rights reserved.
+  </div>
+</footer>
+
+<script>
+  /* ---------- REVIEWS DATA + GOOGLE SHEETS SYNC ---------- */
+
+  const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbzfrQ8hbzwKaSxK3MFmHKkifa3ABBrQcdsRUbGydxIMdlRJiL3LB9LjQTt7CjENh3cq/exec';
+  const GOOGLE_CLIENT_ID = '1083130331196-fqdqorh9m2mdbcsop6hae39sd0f6s0ge.apps.googleusercontent.com';
+
+  const demoReviews = [
+    {
+      id: 'demo-1',
+      initial: 'S',
+      name: 'stela v.',
+      sub: 'Google Business Profile',
+      when: 'Nov 2024 · Solo',
+      rating: 4,
+      date: '2024-12-07',
+      dateLabel: 'Written Dec 7, 2024',
+      likes: 19,
+      text: "I had an amazing massage experience at The Angel MC LLC. Patricia, the receptionist, was very friendly, welcoming, and professional. Kristina is an outstanding massage therapist; one of the best in the area. Her skills are unmatched, and relaxing techniques made my visit truly unforgettable. Thank you for the excellent service, I will definitely come back!",
+      replies: [
+        {
+          name: 'The Angel MC',
+          text: "Thank you so much for your wonderful feedback, and for choosing The Angel MC LLC. We are delighted to hear your response and your massage experience. We are especially pleased that both our reception service and Kristina's massage therapy skills stood out for you, and that it left you feeling relaxed and refreshed."
+        }
+      ]
+    },
+    {
+      id: 'demo-2',
+      initial: 'M',
+      name: 'Michael T.',
+      sub: 'Google Business Profile',
+      when: 'Oct 2024 · Couple',
+      rating: 5,
+      date: '2024-10-22',
+      dateLabel: 'Written Oct 22, 2024',
+      likes: 12,
+      text: "Booked a hot stone massage for me and my wife — the space was calm, the therapist was attentive and checked in on pressure the whole time. Easily the best massage we've had in the area. Will be back.",
+      replies: []
+    },
+    {
+      id: 'demo-3',
+      initial: 'A',
+      name: 'Ana P.',
+      sub: 'Google Business Profile',
+      when: 'Sep 2024 · Solo',
+      rating: 5,
+      date: '2024-09-15',
+      dateLabel: 'Written Sep 15, 2024',
+      likes: 8,
+      text: "Went in for a lymphatic drainage massage after surgery and it made a real difference in my recovery. Professional, gentle, and they explained everything before starting. Highly recommend.",
+      replies: []
+    },
+    {
+      id: 'demo-4',
+      initial: 'D',
+      name: 'David R.',
+      sub: 'Google Business Profile',
+      when: 'Aug 2024 · Solo',
+      rating: 3,
+      date: '2024-08-03',
+      dateLabel: 'Written Aug 3, 2024',
+      likes: 3,
+      text: "Good massage overall, therapist was skilled, but I had to wait about 15 minutes past my appointment time. Would still come back for the quality of the massage itself.",
+      replies: [
+        {
+          name: 'The Angel MC',
+          text: "Thank you for the honest feedback, David — we're glad the massage itself hit the mark, and we've flagged the scheduling gap with our front desk so wait times stay closer to your booked slot."
+        },
+        {
+          name: 'The Angel MC',
+          text: "Quick update: we've since adjusted our booking buffer between appointments so this shouldn't happen again — hope to see you back soon!"
+        }
+      ]
+    }
+  ];
+
+  let reviews = demoReviews.slice();
+  let activeMention = null;
+  const isSheetConfigured = SHEET_API_URL && !SHEET_API_URL.includes('PASTE_YOUR');
+
+  function monthLabel(dateObj) {
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`;
+  }
+
+  function normalizeSheetReview(row) {
+    const d = row.timestamp ? new Date(row.timestamp) : new Date();
+    return {
+      id: row.id || `local-${d.getTime()}-${Math.random().toString(36).slice(2, 7)}`,
+      initial: (row.name || '?').trim().charAt(0).toUpperCase(),
+      name: row.name || 'Anonymous',
+      sub: 'Website visitor',
+      when: monthLabel(d),
+      rating: Number(row.rating) || 5,
+      date: d.toISOString().split('T')[0],
+      dateLabel: `Written ${monthLabel(d)}`,
+      likes: 0,
+      text: row.text || '',
+      replies: row.replyText ? [{ name: 'The Angel MC', text: row.replyText }] : []
+    };
+  }
+
+  async function loadReviewsFromSheet() {
+    const note = document.getElementById('syncNote');
+    if (!isSheetConfigured) {
+      note.textContent = 'Showing demo reviews — connect a Google Sheet so everyone\'s reviews are shared (see setup guide).';
+      note.classList.add('error');
+      return;
+    }
+    try {
+      const res = await fetch(SHEET_API_URL);
+      if (!res.ok) throw new Error('Network response was not ok');
+      const data = await res.json();
+      const fetched = (Array.isArray(data) ? data : []).map(normalizeSheetReview);
+      reviews = fetched.length ? fetched : demoReviews.slice();
+      note.textContent = `Live — showing everyone's reviews (${reviews.length}).`;
+      note.classList.remove('error');
+    } catch (err) {
+      console.warn('Could not load reviews from Google Sheet, showing demo data.', err);
+      note.textContent = 'Could not connect to the reviews sheet right now — showing demo reviews.';
+      note.classList.add('error');
+    }
+    renderSummary();
+    renderMentions();
+    applyFiltersAndSort();
+  }
+
+  async function postReviewToSheet(review) {
+    if (!isSheetConfigured) return { success: false };
+    try {
+      const res = await fetch(SHEET_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'add_review', name: review.name, rating: review.rating, text: review.text })
+      });
+      const data = await res.json();
+      return data && typeof data === 'object' ? data : { success: true };
+    } catch (err) {
+      console.warn('Could not save review to Google Sheet.', err);
+      return { success: false, error: 'Network error' };
+    }
+  }
+
+  async function postReplyToSheet(id, replyText) {
+    if (!isSheetConfigured) {
+      return { success: false, error: "The reviews sheet isn't connected yet — replies can't be saved (see setup guide)." };
+    }
+    try {
+      const res = await fetch(SHEET_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'add_reply', id, replyText })
+      });
+      const data = await res.json();
+      return data && typeof data === 'object' ? data : { success: false, error: 'Unexpected response.' };
+    } catch (err) {
+      console.warn('Could not save reply.', err);
+      return { success: false, error: 'Network error — please try again.' };
+    }
+  }
+
+  let toastTimeout;
+  function showToast(message, isError) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.toggle('error', !!isError);
+    toast.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 4500);
+  }
+
+  const dotsHtml = (rating) => {
+    let html = '';
+    for (let i = 1; i <= 5; i++) {
+      html += `<span class="${i <= rating ? 'filled' : ''}"></span>`;
+    }
+    return html;
+  };
+
+  function escapeRegExp(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlight(text, word) {
+    if (!word) return text;
+    const re = new RegExp(`(${escapeRegExp(word)})`, 'gi');
+    return text.replace(re, '<mark>$1</mark>');
+  }
+
+  function renderSummary() {
+    const total = reviews.length;
+    const avg = total ? reviews.reduce((sum, r) => sum + r.rating, 0) / total : 0;
+    const avgRounded = Math.round(avg * 10) / 10;
+
+    let label = 'No ratings yet';
+    if (avg >= 4.5) label = 'Excellent';
+    else if (avg >= 3.5) label = 'Good';
+    else if (avg >= 2.5) label = 'Average';
+    else if (avg >= 1.5) label = 'Bad';
+    else if (total) label = 'Terrible';
+
+    document.getElementById('avgScore').textContent = total ? avgRounded.toFixed(1) : '—';
+    document.getElementById('avgLabel').textContent = label;
+    document.getElementById('avgDots').innerHTML = dotsHtml(Math.round(avg));
+    document.getElementById('totalCount').textContent = `(${total})`;
+
+    const tiers = [
+      { key: 5, label: 'Excellent' },
+      { key: 4, label: 'Good' },
+      { key: 3, label: 'Average' },
+      { key: 2, label: 'Bad' },
+      { key: 1, label: 'Terrible' }
+    ];
+    const counts = tiers.map(t => reviews.filter(r => r.rating === t.key).length);
+    const maxCount = Math.max(1, ...counts);
+
+    document.getElementById('summaryBars').innerHTML = tiers.map((t, i) => `
+      <div class="bar-row">
+        <span class="bar-label">${t.label}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${(counts[i] / maxCount) * 100}%"></div></div>
+        <span class="bar-count">${counts[i]}</span>
+      </div>
+    `).join('');
+  }
+
+  const STOPWORDS = new Set([
+    'the','and','was','for','with','that','this','have','had','has','are','were',
+    'a','an','i','my','me','it','its','of','to','in','on','at','is','be','so',
+    'we','our','you','your','they','their','he','she','him','her','them','but',
+    'as','from','by','or','not','if','all','also','very','really','just','out',
+    'up','down','will','would','could','can','made','make','one','about','after',
+    'before','into','over','than','then','been','being','more','most','some',
+    'ever','back','again','definitely','highly','when','what','which','who'
+  ]);
+
+  function computeMentions() {
+    const freq = {};
+    const original = {};
+
+    reviews.forEach(r => {
+      const words = r.text.match(/[A-Za-z']+/g) || [];
+      words.forEach(w => {
+        const clean = w.replace(/^'+|'+$/g, '');
+        const lower = clean.toLowerCase();
+        if (lower.length < 4 || STOPWORDS.has(lower)) return;
+        freq[lower] = (freq[lower] || 0) + 1;
+        if (!original[lower]) original[lower] = clean;
+      });
+    });
+
+    return Object.keys(freq)
+      .map(key => ({ word: key, display: original[key], count: freq[key] }))
+      .filter(m => m.count >= 3)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 8);
+  }
+
+  function renderMentions() {
+    const mentions = computeMentions();
+    const container = document.getElementById('mentionsList');
+
+    if (!mentions.length) {
+      container.innerHTML = '<span>Not enough reviews yet for trends</span>';
+      return;
+    }
+
+    container.innerHTML = mentions.map(m => `
+      <button type="button" class="${activeMention === m.word ? 'active' : ''}" data-word="${m.word}">
+        ${m.display} <span class="count">(${m.count})</span>
+      </button>
+    `).join('');
+
+    container.querySelectorAll('button[data-word]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const word = btn.getAttribute('data-word');
+        activeMention = activeMention === word ? null : word;
+        renderMentions();
+        updateMentionChip();
+        applyFiltersAndSort();
+      });
+    });
+  }
+
+  function updateMentionChip() {
+    const chip = document.getElementById('mentionActive');
+    const wordEl = document.getElementById('mentionActiveWord');
+    if (activeMention) {
+      wordEl.textContent = activeMention;
+      chip.style.display = 'flex';
+    } else {
+      chip.style.display = 'none';
+    }
+  }
+
+  document.getElementById('clearMention').addEventListener('click', () => {
+    activeMention = null;
+    renderMentions();
+    updateMentionChip();
+    applyFiltersAndSort();
+  });
+
+  function renderSingleReply(rep, reviewId, idx) {
+    const likeKey = `${reviewId}::${idx}`;
+    return `
+      <div class="reply">
+        <div class="review-head">
+          <div class="avatar">${(rep.name || '?').trim().charAt(0).toUpperCase()}</div>
+          <div class="review-meta">
+            <div class="name">${rep.name}</div>
+          </div>
+        </div>
+        <p class="review-text">${highlight(rep.text, activeMention)}</p>
+        <div class="reply-footer">
+          <button type="button" class="like ${rep.liked ? 'liked' : ''}" data-reply-like="${likeKey}" aria-label="Like this reply">
+            <svg viewBox="0 0 24 24"><path d="M7 10v11H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Zm4 11h7.5a2 2 0 0 0 2-1.6l1.4-7A2 2 0 0 0 20 10h-5.5V5a2.5 2.5 0 0 0-5 0v1.5L7 10"/></svg>
+            <span class="like-count">${rep.likes || 0}</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderReplies(review) {
+    const replies = review.replies || [];
+    if (!replies.length) return '';
+
+    /* Acum TOATE raspunsurile stau ascunse initial (nu doar cele
+       suplimentare), iar link-ul arata numarul total: "Arata N
+       raspunsuri ascunse". La click, se dezvaluie toate. */
+    const allHtml = replies.map((rep, idx) => renderSingleReply(rep, review.id, idx)).join('');
+    const label = `Show ${replies.length} hidden${replies.length > 1 ? 'uri' : ''} answer${replies.length > 1 ? 'e' : ''}`;
+
+    const inner =
+      `<div class="hidden-replies" id="hiddenReplies-${review.id}" style="display:none;">${allHtml}</div>` +
+      `<div class="reply-more" data-toggle-hidden="${review.id}" data-hidden-count="${replies.length}">${label}</div>`;
+
+    return `<div class="replies-block">${inner}</div>`;
+  }
+
+  function renderReviews(list) {
+    const container = document.getElementById('reviewsList');
+    const noReviews = document.getElementById('noReviews');
+
+    document.getElementById('reviewsTitle').textContent = `All reviews (${list.length})`;
+
+    if (!list.length) {
+      container.innerHTML = '';
+      noReviews.style.display = 'block';
+      return;
+    }
+    noReviews.style.display = 'none';
+
+    container.innerHTML = list.map(r => `
+      <div class="review">
+        <div class="review-head">
+          <div class="avatar">${r.initial}</div>
+          <div class="review-meta">
+            <div class="name">${r.name}</div>
+            <div class="sub">${r.sub}</div>
+            <div class="when">${r.when}</div>
+            <div class="review-dots">${dotsHtml(r.rating)}</div>
+          </div>
+        </div>
+
+        <p class="review-text">${highlight(r.text, activeMention)}</p>
+
+        <div class="review-footer">
+          <span>${r.dateLabel}</span>
+          <div class="actions">
+            <button type="button" class="like ${r.liked ? 'liked' : ''}" data-like="${r.id}" aria-label="Like this review">
+              <svg viewBox="0 0 24 24"><path d="M7 10v11H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Zm4 11h7.5a2 2 0 0 0 2-1.6l1.4-7A2 2 0 0 0 20 10h-5.5V5a2.5 2.5 0 0 0-5 0v1.5L7 10"/></svg>
+              <span class="like-count">${r.likes}</span>
+            </button>
+            <button type="button" class="reply-toggle" data-reply-toggle="${r.id}">Reply</button>
+          </div>
+        </div>
+
+        ${renderReplies(r)}
+
+        <div class="reply-admin-form" id="replyForm-${r.id}">
+          <textarea placeholder="Write a reply..." data-rf-text="${r.id}"></textarea>
+          <div class="rf-actions">
+            <button type="button" class="rf-submit" data-rf-submit="${r.id}">Post</button>
+            <button type="button" class="rf-cancel" data-rf-cancel="${r.id}">Cancel</button>
+          </div>
+          <div class="reply-admin-error" id="replyError-${r.id}"></div>
+        </div>
+      </div>
+    `).join('');
+
+    container.querySelectorAll('[data-like]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-like');
+        const rev = reviews.find(rv => String(rv.id) === String(id));
+        if (!rev) return;
+        rev.liked = !rev.liked;
+        rev.likes += rev.liked ? 1 : -1;
+        btn.classList.toggle('liked', rev.liked);
+        btn.querySelector('.like-count').textContent = rev.likes;
+      });
+    });
+
+    /* Like pe un raspuns individual (nu pe review-ul principal) */
+    container.querySelectorAll('[data-reply-like]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-reply-like');
+        const [revId, idxStr] = key.split('::');
+        const rev = reviews.find(rv => String(rv.id) === revId);
+        const rep = rev && rev.replies && rev.replies[Number(idxStr)];
+        if (!rep) return;
+        rep.liked = !rep.liked;
+        rep.likes = (rep.likes || 0) + (rep.liked ? 1 : -1);
+        btn.classList.toggle('liked', rep.liked);
+        btn.querySelector('.like-count').textContent = rep.likes;
+      });
+    });
+
+    container.querySelectorAll('[data-reply-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-reply-toggle');
+        const form = document.getElementById(`replyForm-${id}`);
+        form.classList.toggle('open');
+        if (form.classList.contains('open')) {
+          form.querySelector('textarea').focus();
+        }
+      });
+    });
+
+    container.querySelectorAll('[data-toggle-hidden]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-toggle-hidden');
+        const count = Number(btn.getAttribute('data-hidden-count'));
+        const hiddenBox = document.getElementById(`hiddenReplies-${id}`);
+        const nowShown = hiddenBox.style.display === 'none';
+        hiddenBox.style.display = nowShown ? 'block' : 'none';
+        btn.textContent = nowShown
+          ? 'Hide answers'
+          : `Show ${count} hidden${count > 1 ? ' answers' : ' answer'}`;
+      });
+    });
+
+    container.querySelectorAll('[data-rf-cancel]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-rf-cancel');
+        document.getElementById(`replyForm-${id}`).classList.remove('open');
+      });
+    });
+
+    container.querySelectorAll('[data-rf-submit]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-rf-submit');
+        const textInput = container.querySelector(`[data-rf-text="${id}"]`);
+        const errorEl = document.getElementById(`replyError-${id}`);
+        const replyText = textInput.value.trim();
+
+        errorEl.classList.remove('show');
+
+        if (!replyText) {
+          errorEl.textContent = 'Please write a reply before posting.';
+          errorEl.classList.add('show');
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Posting…';
+
+        const result = await postReplyToSheet(id, replyText);
+
+        btn.disabled = false;
+        btn.textContent = 'Post';
+
+        if (result.success) {
+          const rev = reviews.find(rv => String(rv.id) === String(id));
+          if (rev) {
+            if (!rev.replies) rev.replies = [];
+            rev.replies.push({ name: 'The Angel MC', text: replyText });
+          }
+          textInput.value = '';
+          const form = document.getElementById(`replyForm-${id}`);
+          if (form) form.classList.remove('open');
+          showToast('Your reply has been posted.');
+          applyFiltersAndSort();
+        } else {
+          errorEl.textContent = result.error || 'Something went wrong. Please try again.';
+          errorEl.classList.add('show');
+        }
+      });
+    });
+  }
+
+  function applyFiltersAndSort() {
+    const ratingFilter = document.getElementById('ratingFilter').value;
+    const sortValue = document.getElementById('sortReviews').value;
+
+    let list = reviews.slice();
+
+    if (ratingFilter !== 'all') {
+      list = list.filter(r => r.rating === Number(ratingFilter));
+    }
+
+    if (activeMention) {
+      const re = new RegExp(`\\b${escapeRegExp(activeMention)}\\b`, 'i');
+      list = list.filter(r => re.test(r.text) || (r.replies || []).some(rep => re.test(rep.text)));
+    }
+
+    if (sortValue === 'recent') {
+      list.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (sortValue === 'highest') {
+      list.sort((a, b) => b.rating - a.rating);
+    } else if (sortValue === 'lowest') {
+      list.sort((a, b) => a.rating - b.rating);
+    }
+
+    renderReviews(list);
+  }
+
+  document.getElementById('ratingFilter').addEventListener('change', applyFiltersAndSort);
+  document.getElementById('sortReviews').addEventListener('change', applyFiltersAndSort);
+
+  let currentUserName = '';
+  let currentUserPicture = '';
+  const isGoogleConfigured = GOOGLE_CLIENT_ID && !GOOGLE_CLIENT_ID.includes('PASTE_YOUR');
+
+  function decodeJwt(token) {
+    try {
+      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(decodeURIComponent(atob(base64).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      ).join('')));
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function showSignedIn(name, picture) {
+    currentUserName = name;
+    currentUserPicture = picture || '';
+    document.getElementById('googleSignInBtn').style.display = 'none';
+    document.getElementById('wrSignedInName').textContent = name;
+    const picEl = document.getElementById('wrSignedInPic');
+    if (picture) { picEl.src = picture; picEl.style.display = ''; } else { picEl.style.display = 'none'; }
+    document.getElementById('wrSignedIn').style.display = 'flex';
+  }
+
+  function handleGoogleCredential(response) {
+    const payload = decodeJwt(response.credential);
+    if (payload && payload.name) {
+      showSignedIn(payload.name, payload.picture);
+    }
+  }
+
+  if (isGoogleConfigured && window.google && window.google.accounts) {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleCredential
+    });
+    google.accounts.id.renderButton(
+      document.getElementById('googleSignInBtn'),
+      { theme: 'outline', size: 'medium', shape: 'pill' }
+    );
+  } else {
+    document.getElementById('googleSignInBtn').style.display = 'none';
+  }
+
+  document.getElementById('wrSignOut').addEventListener('click', () => {
+    currentUserName = '';
+    currentUserPicture = '';
+    document.getElementById('wrSignedIn').style.display = 'none';
+    if (isGoogleConfigured) document.getElementById('googleSignInBtn').style.display = '';
+  });
+
+  const toggleBtn = document.getElementById('toggleWriteReview');
+  const panel = document.getElementById('writeReviewPanel');
+  toggleBtn.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) {
+      document.getElementById('wr-text').focus();
+    }
+  });
+
+  let selectedRating = 0;
+  const starButtons = document.querySelectorAll('#starPicker .star');
+  starButtons.forEach(star => {
+    star.addEventListener('click', () => {
+      selectedRating = Number(star.getAttribute('data-value'));
+      starButtons.forEach(s => {
+        s.classList.toggle('filled', Number(s.getAttribute('data-value')) <= selectedRating);
+      });
+    });
+  });
+
+  document.getElementById('writeReviewForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = document.getElementById('wr-text').value.trim();
+
+    if (!text || !selectedRating) {
+      alert('Please add a rating and a short review before posting.');
+      return;
+    }
+
+    let name = currentUserName;
+    if (!name) {
+      name = (prompt('Your name (shown next to your review):') || '').trim();
+      if (!name) return;
+    }
+
+    const submitBtn = document.getElementById('wr-submit');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Posting…';
+
+    const today = new Date();
+    const newReview = normalizeSheetReview({
+      name,
+      rating: selectedRating,
+      text,
+      timestamp: today.toISOString()
+    });
+
+    const result = isSheetConfigured
+      ? await postReviewToSheet({ name, rating: selectedRating, text })
+      : { success: false };
+
+    if (result.success && result.id) {
+      newReview.id = result.id;
+    }
+
+    reviews.unshift(newReview);
+
+    document.getElementById('writeReviewForm').reset();
+    starButtons.forEach(s => s.classList.remove('filled'));
+    selectedRating = 0;
+    panel.classList.remove('open');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Post review';
+
+    const note = document.getElementById('syncNote');
+    if (isSheetConfigured && result.success) {
+      note.textContent = 'Thanks! Your review is now live for everyone.';
+      note.classList.remove('error');
+      showToast('Your review has been posted — thank you! 🙏');
+    } else if (isSheetConfigured && !result.success) {
+      note.textContent = 'Your review was added here, but saving to the shared sheet failed — it may not appear for other visitors.';
+      note.classList.add('error');
+      showToast('Posted here, but syncing to the shared sheet failed. Please try again shortly.', true);
+    } else {
+      note.textContent = 'Added locally for this preview — connect a Google Sheet so everyone can see it (see setup guide).';
+      note.classList.add('error');
+      showToast('Review posted (preview mode) — connect a Google Sheet to make this visible to everyone.', true);
+    }
+
+    renderSummary();
+    renderMentions();
+    document.getElementById('ratingFilter').value = 'all';
+    document.getElementById('sortReviews').value = 'recent';
+    activeMention = null;
+    updateMentionChip();
+    applyFiltersAndSort();
+  });
+
+  renderSummary();
+  renderMentions();
+  applyFiltersAndSort();
+  loadReviewsFromSheet();
+</script>
+
+</body>
+</html>
