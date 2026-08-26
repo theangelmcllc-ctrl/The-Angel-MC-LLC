@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointment — The Angel MC LLC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Cormorant:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+<header class="book-hero">
+
+  <div class="book-inner">
+
+    <nav class="navbar">
+
+      <a
+        href="index.html"
+        class="logo logo-card"
+        aria-label="The Angel MC LLC — home"
+      >
+        <img
+          src="images/logo.jpg"
+          alt="Angel MC logo"
+        >
+      </a>
+
+      <div class="nav-links" id="navLinks">
+
+        <a href="services.html">Services</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="contact.html">Contacts</a>
+        <a href="appointment.html">Appointment</a>
+
+      </div>
+
+      <button
+        class="nav-toggle"
+        id="navToggle"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+        aria-controls="navLinks"
+      >
+        <span></span>
+      </button>
+
+    </nav>
+
+
+    <div class="book-content">
+
+      <div class="eyebrow-row">
+
+        <span class="rule"></span>
+
+        <span class="label">
+          Appointment
+        </span>
+
+        <span class="rule"></span>
+
+      </div>
+
+
+      <h1>
+        Start your appointment request here.
+      </h1>
+
+
+      <p class="lorem">
+        Massage services are available by appointment only.<br>
+Please book your appointment in advance to enjoy our services. Walk-ins cannot be accommodated without a confirmed appointment.
+
+      </p>
+
+
+      <a href="https://squareup.com/appointments/book/LC4EXXAT15HW4" class="btn">
+        Sign up
+      </a>
+
+    </div>
+
+  </div>
+
+</header>
+
+<section class="location">
+  <h2>Location</h2>
+  <div class="location-grid">
+    <figure><img src="images/contacte.jpg" alt="The Angel MC LLC location — exterior view 1"></figure>
+    <figure><img src="images/contacte.jpg" alt="The Angel MC LLC location — exterior view 2"></figure>
+    <figure><img src="images/contacte.jpg" alt="The Angel MC LLC location — exterior view 3"></figure>
+  </div>
+</section>
+
+<footer>
+  <nav class="footer-nav">
+    <a href="index.html#top">Home</a>
+    <a href="services.html">Services</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="contact.html">Contacts</a>
+    <a href="appointment.html">Appointment</a>
+  </nav>
+
+  <div class="footer-social">
+    <a href="https://instagram.com/MC_the_Angel_7" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <defs>
+          <linearGradient id="igGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#feda75"/>
+            <stop offset="25%" stop-color="#fa7e1e"/>
+            <stop offset="55%" stop-color="#d62976"/>
+            <stop offset="80%" stop-color="#962fbf"/>
+            <stop offset="100%" stop-color="#4f5bd5"/>
+          </linearGradient>
+        </defs>
+        <rect x="2" y="2" width="20" height="20" rx="6" fill="url(#igGrad2)"/>
+        <rect x="6.2" y="6.2" width="11.6" height="11.6" rx="4" fill="none" stroke="#fff" stroke-width="1.6"/>
+        <circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.6"/>
+        <circle cx="17" cy="7" r="1.1" fill="#fff"/>
+      </svg>
+      <span>MC_the_Angel_7</span>
+    </a>
+
+    <a href="mailto:theangelmc333@gmail.com">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" fill="#fff"/>
+        <path d="M2 6l10 8 10-8" fill="none" stroke="#EA4335" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M2 6v12h4V9.2Z" fill="#4285F4"/>
+        <path d="M22 6v12h-4V9.2Z" fill="#34A853"/>
+        <path d="M6 9.2 2 6h4Z" fill="#C5221F"/>
+        <path d="M18 9.2 22 6h-4Z" fill="#FBBC04"/>
+      </svg>
+      <span>theangelmc333@gmail.com</span>
+    </a>
+
+    <a href="https://www.facebook.com/profile.php?id=61557746706475" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5" fill="#1877F2"/>
+        <path d="M14.8 8.6h1.8V5.9h-1.8c-2 0-3.4 1.4-3.4 3.4v1.6H9.5v2.7h1.9V19h2.8v-5.4h1.9l.4-2.7h-2.3V9.6c0-.6.3-1 .9-1Z" fill="#fff"/>
+      </svg>
+      <span translate="no">The Angel Massage Therapy</span>
+    </a>
+  </div>
+
+  <div class="footer-bottom">
+    © <span id="year"></span> The Angel MC LLC. All rights reserved.
+  </div>
+</footer>
+
+<script>
+  /* Pre-select service from ?service=... (e.g. linked from services.html) */
+  const params = new URLSearchParams(window.location.search);
+  const preselect = params.get('service');
+  if (preselect) {
+    const select = document.getElementById('f-service');
+    const match = Array.from(select.options).find(
+      opt => opt.value.toLowerCase() === preselect.toLowerCase()
+    );
+    if (match) select.value = match.value;
+  }
+
+  /* Prevent picking a date in the past */
+  const dateInput = document.getElementById('f-date');
+  dateInput.min = new Date().toISOString().split('T')[0];
+
+  /* Form validation + mailto submission (no backend on this site) */
+  const form = document.getElementById('booking-form');
+  const statusEl = document.getElementById('formStatus');
+
+  function setError(id, message) {
+    const el = document.querySelector(`[data-error-for="${id}"]`);
+    if (el) el.textContent = message || '';
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    statusEl.classList.remove('show');
+
+    let valid = true;
+    const name = document.getElementById('f-name').value.trim();
+    const phone = document.getElementById('f-phone').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const date = document.getElementById('f-date').value;
+    const time = document.getElementById('f-time').value;
+    const service = document.getElementById('f-service').value;
+    const message = document.getElementById('f-message').value.trim();
+
+    setError('f-name', ''); setError('f-phone', ''); setError('f-email', ''); setError('f-date', '');
+
+    if (!name) { setError('f-name', 'Please enter your name.'); valid = false; }
+    if (!phone) { setError('f-phone', 'Please enter a phone number.'); valid = false; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('f-email', 'Please enter a valid email.'); valid = false;
+    }
+    if (!date) { setError('f-date', 'Please choose a date.'); valid = false; }
+
+    if (!valid) return;
+
+    const subject = encodeURIComponent(`Appointment request — ${name}`);
+    const bodyLines = [
+      `Name: ${name}`,
+      `Phone: ${phone}`,
+      `Email: ${email}`,
+      `Service: ${service || 'Not specified'}`,
+      `Preferred date: ${date}`,
+      `Preferred time: ${time || 'Not specified'}`,
+      `Message: ${message || '—'}`
+    ];
+    const body = encodeURIComponent(bodyLines.join('\n'));
+
+    window.location.href = `mailto:theangelmc333@gmail.com?subject=${subject}&body=${body}`;
+
+    statusEl.textContent = 'Your email app should open with the request filled in — just hit send.';
+    statusEl.classList.add('show');
+  });
+</script>
+
+</body>
+</html>
